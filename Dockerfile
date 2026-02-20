@@ -1,30 +1,55 @@
-FROM nginx:alpine
+# Stage 1: Build Frontend
+FROM node:18-alpine AS frontend-builder
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
+RUN npm install
+COPY frontend .
+# Ensure Next.js output is standalone
+RUN npm run build
 
-# Copy website files
-COPY . /usr/share/nginx/html
+# Stage 2: Build Backend & Runtime
+FROM python:3.11-slim
 
-# Custom nginx config for SPA handling
-RUN echo 'server { \
-    listen 80; \
-    server_name localhost; \
-    root /usr/share/nginx/html; \
-    index index.html; \
-    \
-    location / { \
-    try_files $uri $uri/ /index.html; \
-    } \
-    \
-    location ~* \.(css|js|jpg|jpeg|png|gif|ico|svg|woff|woff2)$ { \
-    expires 1y; \
-    add_header Cache-Control "public, immutable"; \
-    } \
-    \
-    # Security headers \
-    add_header X-Frame-Options "SAMEORIGIN" always; \
-    add_header X-Content-Type-Options "nosniff" always; \
-    add_header X-XSS-Protection "1; mode=block" always; \
-    }' > /etc/nginx/conf.d/default.conf
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    nginx \
+    curl \
+    gettext-base \
+    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
 
-EXPOSE 80
+WORKDIR /app
 
-CMD ["nginx", "-g", "daemon off;"]
+# Setup Backend
+COPY backend/requirements.txt ./backend/requirements.txt
+RUN pip install --no-cache-dir -r ./backend/requirements.txt
+COPY backend ./backend
+
+# Setup Frontend (Standalone)
+# Next.js standalone output is in .next/standalone
+COPY --from=frontend-builder /app/frontend/.next/standalone ./frontend
+COPY --from=frontend-builder /app/frontend/public ./frontend/public
+COPY --from=frontend-builder /app/frontend/.next/static ./frontend/.next/static
+
+# Note: standalone output structure can be tricky. 
+# Usually, it's .next/standalone/server.js
+# And we need to copy public and static into the right places within the standalone folder.
+# The copy above assumes we are in /app and frontend is /app/frontend.
+
+# Nginx config
+COPY nginx.conf.template /etc/nginx/conf.d/default.conf
+
+# Entrypoint script
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# Create data directory for SQLite
+RUN mkdir -p /data && chmod 777 /data
+
+# Default environment variables
+ENV PORT=10000
+ENV DATABASE_URL=sqlite:////data/sql_app.db
+EXPOSE 10000
+
+CMD ["/app/entrypoint.sh"]
