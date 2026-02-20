@@ -13,6 +13,14 @@ cleanup() {
 
 trap cleanup SIGINT SIGTERM
 
+echo "--- Initializing Database ---"
+cd /app/backend
+# Initialize database tables if they don't exist
+python3 -m app.db.init_db
+if [ $? -ne 0 ]; then
+    echo "❌ Database initialization failed. Continuing anyway..."
+fi
+
 echo "--- Starting Services ---"
 
 # 1. Start Backend (FastAPI)

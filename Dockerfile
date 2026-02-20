@@ -45,7 +45,7 @@ COPY --from=frontend-builder /app/frontend/public ./frontend/public
 COPY --from=frontend-builder /app/frontend/.next/static ./frontend/.next/static
 
 # Permissions
-RUN mkdir -p /data && chown -R appuser:nodejs /app /data
+RUN chown -R appuser:nodejs /app
 USER appuser
 
 # Environment defaults
