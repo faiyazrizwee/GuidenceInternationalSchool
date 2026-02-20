@@ -1,0 +1,34 @@
+# Environment
+.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+*.log
+
+# Uvicorn / Logs
+uvicorn_log.txt
+
+# Node
+node_modules/
+.next/
+dist/
+build/
+
+# Video
+*.mp4
+
+# IDE
+.vscode/
+.agent/
+
+# OS
+.DS_Store
+
+# Media backups
+*.pdf

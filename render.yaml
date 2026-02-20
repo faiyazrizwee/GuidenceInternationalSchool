@@ -1,0 +1,30 @@
+services:
+  # Backend Service
+  - type: web
+    name: school-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:///data/sql_app.db
+      - key: BACKEND_CORS_ORIGINS
+        value: "*" # We can restrict this later once we have the frontend URL
+    disk:
+      name: school-data
+      mountPath: /data
+      sizeGB: 1
+
+  # Frontend Service
+  - type: web
+    name: school-frontend
+    env: node
+    plan: free # Change if needed
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npm run start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: school-backend
+          property: host
