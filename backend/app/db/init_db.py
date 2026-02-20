@@ -27,7 +27,7 @@ def init_db(session: Session) -> None:
     if not user:
         user = User(
             username="admin",
-            hashed_password=security.get_password_hash("admin"), # Change in production
+            hashed_password=security.get_password_hash("admin123"), # Change in production
             is_superuser=True,
         )
         session.add(user)
