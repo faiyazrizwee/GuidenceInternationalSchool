@@ -1,18 +1,15 @@
 services:
-  # Single Full-stack Service
   - type: web
     name: school-fullstack
     env: docker
-    plan: free # Change if needed
-    region: singapore # Change to your preferred region
+    plan: free
+    region: singapore
     envVars:
       - key: DATABASE_URL
         value: sqlite:///data/sql_app.db
       - key: BACKEND_CORS_ORIGINS
         value: "*"
       - key: NEXT_PUBLIC_API_URL
-        # This will be the public URL of the service itself
-        # Since frontend and backend are on same domain, it can often be relative or same host
         value: "/api/v1"
     disk:
       name: school-data

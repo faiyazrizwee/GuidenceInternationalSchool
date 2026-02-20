@@ -1,18 +1,35 @@
 #!/bin/bash
 
-# Replace ${PORT} with the actual PORT environment variable in nginx config
-# Using sed to be safe as envsubst might not be available or might replace too much
-sed -i "s/\${PORT}/${PORT:-10000}/g" /etc/nginx/conf.d/default.conf
+# Production Entrypoint for Full-stack Container
+# Manages FastAPI (Uvicorn) and Next.js processes
 
-echo "Starting Backend on port 8000..."
+# Handle termination signals
+cleanup() {
+    echo "Shutting down..."
+    kill -TERM "$BACKEND_PID" 2>/dev/null
+    kill -TERM "$FRONTEND_PID" 2>/dev/null
+    exit 0
+}
+
+trap cleanup SIGINT SIGTERM
+
+echo "--- Starting Services ---"
+
+# 1. Start Backend (FastAPI)
+echo "Starting Backend on 0.0.0.0:8000..."
 cd /app/backend
 uvicorn app.main:app --host 0.0.0.0 --port 8000 &
+BACKEND_PID=$!
 
-echo "Starting Frontend on port 3000..."
+# 2. Start Frontend (Next.js)
+echo "Starting Frontend on 0.0.0.0:${PORT:-3000}..."
 cd /app/frontend
-# Next.js standalone server runs on 3000 by default
-HOSTNAME="0.0.0.0" PORT=3000 node server.js &
+# Next.js standalone server handles the PORT env var automatically
+# But we ensure it's bound to 0.0.0.0
+HOSTNAME="0.0.0.0" node server.js &
+FRONTEND_PID=$!
 
-echo "Starting Nginx on port ${PORT}..."
-# Nginx will proxy to 8000 (backend) and 3000 (frontend)
-nginx -g "daemon off;"
+echo "--- Services are running ---"
+
+# Wait for processes
+wait "$BACKEND_PID" "$FRONTEND_PID"

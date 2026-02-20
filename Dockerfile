@@ -1,55 +1,60 @@
-# Stage 1: Build Frontend
+# Syntax=docker/dockerfile:1
+# --- Stage 1: Frontend Build ---
 FROM node:18-alpine AS frontend-builder
 WORKDIR /app/frontend
+RUN apk add --no-cache libc6-compat
+
+# Install dependencies based on preferred package manager
 COPY frontend/package*.json ./
-RUN npm install
+RUN npm ci
+
+# Build the app
 COPY frontend .
-# Ensure Next.js output is standalone
+ENV NEXT_TELEMETRY_DISABLED 1
 RUN npm run build
 
-# Stage 2: Build Backend & Runtime
-FROM python:3.11-slim
+# --- Stage 2: Final Runtime ---
+FROM python:3.11-slim AS runtime
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    nginx \
+# Install Node.js runtime and production essentials
+RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
-    gettext-base \
     && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs \
+    && apt-get install -y nodejs --no-install-recommends \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
+# Setup Security: Create non-root user
+RUN groupadd -g 1001 nodejs && \
+    useradd -u 1001 -g nodejs -s /bin/sh -m appuser
+
 # Setup Backend
 COPY backend/requirements.txt ./backend/requirements.txt
-RUN pip install --no-cache-dir -r ./backend/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r ./backend/requirements.txt
 COPY backend ./backend
 
-# Setup Frontend (Standalone)
-# Next.js standalone output is in .next/standalone
+# Setup Frontend (Standalone mode)
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+
+# Copy standalone output and static assets
 COPY --from=frontend-builder /app/frontend/.next/standalone ./frontend
 COPY --from=frontend-builder /app/frontend/public ./frontend/public
 COPY --from=frontend-builder /app/frontend/.next/static ./frontend/.next/static
 
-# Note: standalone output structure can be tricky. 
-# Usually, it's .next/standalone/server.js
-# And we need to copy public and static into the right places within the standalone folder.
-# The copy above assumes we are in /app and frontend is /app/frontend.
+# Permissions
+RUN mkdir -p /data && chown -R appuser:nodejs /app /data
+USER appuser
 
-# Nginx config
-COPY nginx.conf.template /etc/nginx/conf.d/default.conf
-
-# Entrypoint script
-COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
-
-# Create data directory for SQLite
-RUN mkdir -p /data && chmod 777 /data
-
-# Default environment variables
-ENV PORT=10000
-ENV DATABASE_URL=sqlite:////data/sql_app.db
+# Environment defaults
+ENV PORT 10000
+ENV DATABASE_URL sqlite:////data/sql_app.db
 EXPOSE 10000
+
+# Entrypoint
+COPY --chown=appuser:nodejs entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 CMD ["/app/entrypoint.sh"]
