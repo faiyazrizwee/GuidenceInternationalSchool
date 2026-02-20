@@ -15,7 +15,20 @@ class Settings(BaseSettings):
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "postgres"
     POSTGRES_DB: str = "app"
-    DATABASE_URL: str | None = None
+    _DATABASE_URL: str | None = None
+
+    @property
+    def DATABASE_URL(self) -> str:
+        if self._DATABASE_URL:
+            # SQLAlchemy requires postgresql:// instead of postgres://
+            if self._DATABASE_URL.startswith("postgres://"):
+                return self._DATABASE_URL.replace("postgres://", "postgresql://", 1)
+            return self._DATABASE_URL
+        return f"sqlite:///./sql_app.db"
+
+    @DATABASE_URL.setter
+    def DATABASE_URL(self, value: str):
+        self._DATABASE_URL = value
 
     # Email
     MAIL_USERNAME: str | None = None

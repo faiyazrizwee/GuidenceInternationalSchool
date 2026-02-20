@@ -6,10 +6,10 @@ from app.core.config import settings
 # For now we use the default SQLALCHEMY URL structure for psycopg2
 # postgresql://user:password@postgresserver/db
 
-SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL or "sqlite:///./sql_app.db"
+SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
 
 connect_args = {}
-if "sqlite" in SQLALCHEMY_DATABASE_URL:
+if SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
     connect_args["check_same_thread"] = False
 
 engine = create_engine(

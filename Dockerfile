@@ -50,7 +50,7 @@ USER appuser
 
 # Environment defaults
 ENV PORT 10000
-ENV DATABASE_URL sqlite:////data/sql_app.db
+ENV DATABASE_URL=""
 EXPOSE 10000
 
 # Entrypoint

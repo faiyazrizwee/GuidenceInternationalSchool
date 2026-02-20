@@ -27,16 +27,17 @@ services:
     depends_on:
       - db
 
-  # Frontend service will be added later after ensuring it builds correctly
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - ./frontend:/app
-  #     - /app/node_modules
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "10000:10000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/app
+      - NEXT_PUBLIC_API_URL=http://backend:8000/api/v1
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:

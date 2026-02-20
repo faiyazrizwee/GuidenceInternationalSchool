@@ -3,13 +3,12 @@ from app.models.user import User
 from app.core import security
 from app.core.config import settings
 
-# Force SQLite if not set
-db_url = settings.DATABASE_URL or "sqlite:///./sql_app.db"
-if "sqlite" in db_url:
+db_url = settings.DATABASE_URL
+connect_args = {}
+if db_url.startswith("sqlite"):
     connect_args = {"check_same_thread": False}
-    engine = create_engine(db_url, connect_args=connect_args)
-else:
-    engine = create_engine(db_url)
+
+engine = create_engine(db_url, connect_args=connect_args)
 
 def check_admin():
     with Session(engine) as session:
