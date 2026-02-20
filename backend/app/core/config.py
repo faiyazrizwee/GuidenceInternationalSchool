@@ -19,11 +19,12 @@ class Settings(BaseSettings):
 
     @property
     def DATABASE_URL(self) -> str:
-        if self._DATABASE_URL:
+        url = self._DATABASE_URL
+        if url:
             # SQLAlchemy requires postgresql:// instead of postgres://
-            if self._DATABASE_URL.startswith("postgres://"):
-                return self._DATABASE_URL.replace("postgres://", "postgresql://", 1)
-            return self._DATABASE_URL
+            if url.startswith("postgres://"):
+                url = url.replace("postgres://", "postgresql://", 1)
+            return url
         return f"sqlite:///./sql_app.db"
 
     @DATABASE_URL.setter

@@ -9,12 +9,17 @@ from app.core.config import settings
 SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
 
 connect_args = {}
-if SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
+if SQLALCHEMY_DATABASE_URL.startswith("postgresql"):
+    # SSL is required for Supabase
+    connect_args["sslmode"] = "require"
+elif SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
     connect_args["check_same_thread"] = False
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, 
     pool_pre_ping=True,
+    pool_size=5,
+    max_overflow=10,
     connect_args=connect_args
 )
 from sqlmodel import Session
