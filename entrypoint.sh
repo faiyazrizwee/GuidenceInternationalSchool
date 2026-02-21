@@ -24,9 +24,10 @@ fi
 echo "--- Starting Services ---"
 
 # 1. Start Backend (FastAPI)
-echo "Starting Backend on 0.0.0.0:8000..."
+BACKEND_PORT=${BACKEND_PORT:-8000}
+echo "Starting Backend on 0.0.0.0:${BACKEND_PORT}..."
 cd /app/backend
-uvicorn app.main:app --host 0.0.0.0 --port 8000 &
+uvicorn app.main:app --host 0.0.0.0 --port ${BACKEND_PORT} &
 BACKEND_PID=$!
 
 # 2. Start Frontend (Next.js)
