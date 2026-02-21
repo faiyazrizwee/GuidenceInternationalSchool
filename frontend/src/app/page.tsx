@@ -168,7 +168,7 @@ export default function Home() {
                     <Link href="/about" className="btn btn-red btn-pill">Discover More</Link>
                 </div>
                 <div className="who-we-are-image reveal" style={{transform: "translateY(3rem)"}}>
-                     <Image src="/assets/gallery/new_pic/PXL_20251017_054720044.PORTRAIT.jpg" alt="Students Learning" width={600} height={400} style={{borderRadius: "20px"}} />
+                     <Image src="/assets/gallery/New/PXL_20251017_054720044.PORTRAIT.jpg" alt="Students Learning" width={600} height={400} style={{borderRadius: "20px"}} />
                 </div>
             </div>
         </section>
@@ -197,8 +197,8 @@ export default function Home() {
                 </div>
                 <div className="difference-image reveal">
                      <div className="image-grid-collage">
-                         <Image src="/assets/gallery/new_pic/PXL_20251015_080155943.PORTRAIT.jpg" alt="Student Reading" width={300} height={200} className="collage-img-1" />
-                         <Image src="/assets/gallery/new_pic/PXL_20251017_055832183.PORTRAIT.jpg" alt="Science Lab" width={300} height={200} className="collage-img-2" />
+                         <Image src="/assets/gallery/New/PXL_20251015_080155943.PORTRAIT.jpg" alt="Student Reading" width={300} height={200} className="collage-img-1" />
+                         <Image src="/assets/gallery/New/PXL_20251017_055832183.PORTRAIT.jpg" alt="Science Lab" width={300} height={200} className="collage-img-2" />
                      </div>
                 </div>
             </div>

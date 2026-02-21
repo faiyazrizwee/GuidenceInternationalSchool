@@ -21,18 +21,27 @@ def init_db(session: Session) -> None:
     from sqlmodel import SQLModel
     SQLModel.metadata.create_all(engine)
 
-    user = session.exec(
-        select(User).where(User.username == "admin")
-    ).first()
-    if not user:
-        user = User(
-            username="admin",
-            hashed_password=security.get_password_hash("admin123"), # Change in production
-            is_superuser=True,
-        )
-        session.add(user)
-        session.commit()
-        session.refresh(user)
+    print("DEBUG: Checking for admin user...")
+    try:
+        user = session.exec(
+            select(User).where(User.username == "admin")
+        ).first()
+        if not user:
+            print("DEBUG: Admin user not found. Creating...")
+            user = User(
+                username="admin",
+                hashed_password=security.get_password_hash("admin123"), # Change in production
+                is_superuser=True,
+            )
+            session.add(user)
+            session.commit()
+            session.refresh(user)
+            print("DEBUG: Admin user created successfully.")
+        else:
+            print(f"DEBUG: Admin user already exists. ID: {user.id}, Active: {user.is_active}")
+    except Exception as e:
+        print(f"ERROR: Failed to check/create admin user: {str(e)}")
+        session.rollback()
 
     # Seed Staff Data if empty
     from app.models.staff import StaffMember
@@ -62,6 +71,11 @@ def init_db(session: Session) -> None:
         for staff in staff_data:
             session.add(StaffMember(**staff))
         session.commit()
+        print(f"DEBUG: Staff data seeded successfully ({len(staff_data)} members).")
+    else:
+        # Count existing staff
+        count = session.exec(select(StaffMember)).all()
+        print(f"DEBUG: Staff data already exists ({len(count)} members).")
 
 def main() -> None:
     with Session(engine) as session:

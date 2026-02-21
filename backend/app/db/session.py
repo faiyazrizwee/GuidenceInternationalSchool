@@ -8,6 +8,13 @@ from app.core.config import settings
 
 SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
 
+# Log database connection attempt (obfuscating password)
+if SQLALCHEMY_DATABASE_URL:
+    from urllib.parse import urlparse
+    parsed = urlparse(SQLALCHEMY_DATABASE_URL)
+    obfuscated_url = f"{parsed.scheme}://{parsed.username}:****@{parsed.hostname}:{parsed.port}{parsed.path}"
+    print(f"DEBUG: Connecting to database: {obfuscated_url}")
+
 connect_args = {}
 if SQLALCHEMY_DATABASE_URL.startswith("postgresql"):
     # SSL is required for Supabase
