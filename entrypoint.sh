@@ -13,14 +13,6 @@ cleanup() {
 
 trap cleanup SIGINT SIGTERM
 
-echo "--- Initializing Database ---"
-cd /app/backend
-# Initialize database tables if they don't exist
-python3 -m app.db.init_db
-if [ $? -ne 0 ]; then
-    echo "❌ Database initialization failed. Continuing anyway..."
-fi
-
 echo "--- Starting Services ---"
 
 # 1. Start Backend (FastAPI)
@@ -30,9 +22,9 @@ cd /app/backend
 uvicorn app.main:app --host 0.0.0.0 --port ${BACKEND_PORT} --proxy-headers --forwarded-allow-ips='*' &
 BACKEND_PID=$!
 
-# Wait for backend to be ready
-echo "⏳ Waiting for backend to initialize..."
-sleep 5
+# Wait briefly for backend to start up - reduced for faster port binding
+echo "⏳ Waiting for backend to bind port..."
+sleep 2
 
 # 2. Start Frontend (Next.js)
 # Render provides the port in the PORT environment variable (default 10000)

@@ -14,6 +14,9 @@ if SQLALCHEMY_DATABASE_URL:
     parsed = urlparse(SQLALCHEMY_DATABASE_URL)
     obfuscated_url = f"{parsed.scheme}://{parsed.username}:****@{parsed.hostname}:{parsed.port}{parsed.path}"
     print(f"DEBUG: Connecting to database: {obfuscated_url}")
+    if "pooler.supabase.com" in SQLALCHEMY_DATABASE_URL and ":5432" in SQLALCHEMY_DATABASE_URL:
+        print("⚠️ WARNING: You are using port 5432 with a Supabase Pooler. This often causes timeouts.")
+        print("👉 PLEASE CHANGE PORT 5432 TO 6543 IN YOUR DATABASE_URL ENVIRONMENT VARIABLE!")
 
 connect_args = {}
 if SQLALCHEMY_DATABASE_URL.startswith("postgresql"):

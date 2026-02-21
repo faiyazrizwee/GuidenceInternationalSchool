@@ -12,14 +12,28 @@ app = FastAPI(
 
 @app.on_event("startup")
 def on_startup():
-    from sqlmodel import SQLModel, Session
-    from app.db.session import engine
-    from app import models # Import models to register them with SQLModel
-    from app.db.init_db import init_db
-    
-    SQLModel.metadata.create_all(engine)
-    with Session(engine) as session:
-        init_db(session)
+    import threading
+    def run_init():
+        from sqlmodel import SQLModel, Session
+        from app.db.session import engine
+        from app import models 
+        from app.db.init_db import init_db
+        
+        print("DEBUG: Background database initialization starting...")
+        try:
+            # Create tables
+            SQLModel.metadata.create_all(engine)
+            # Seed data
+            with Session(engine) as session:
+                init_db(session)
+            print("DEBUG: Background database initialization completed.")
+        except Exception as e:
+            print(f"ERROR: Background database initialization failed: {e}")
+
+    # Run in a background thread so the web server can bind to its port immediately
+    thread = threading.Thread(target=run_init)
+    thread.daemon = True
+    thread.start()
 
 # Set all CORS enabled origins
 if settings.BACKEND_CORS_ORIGINS:
