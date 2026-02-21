@@ -104,8 +104,8 @@ def init_db(session: Session) -> None:
         print("DEBUG: Year Plan data already exists.")
 
 def main() -> None:
-    max_retries = 5
-    retry_delay = 2  # seconds, doubles each retry
+    max_retries = 10 # More retries for production cold starts
+    retry_delay = 5  # Start with 5s delay
 
     for attempt in range(1, max_retries + 1):
         try:

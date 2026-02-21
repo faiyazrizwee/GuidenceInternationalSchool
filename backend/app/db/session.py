@@ -12,11 +12,22 @@ SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
 if SQLALCHEMY_DATABASE_URL:
     from urllib.parse import urlparse
     parsed = urlparse(SQLALCHEMY_DATABASE_URL)
+    
+    # PERMANENT PRODUCTION FIX: Auto-switch Supabase pooler to port 6543
+    # Port 5432 (direct/session) often times out on Render. Port 6543 (transaction) is more stable.
+    if parsed.hostname and "pooler.supabase.com" in parsed.hostname and (parsed.port == 5432 or parsed.port is None):
+        print("🔧 AUTO-CORRECT: Switching Supabase port from 5432 to 6543 for better stability.")
+        # Manual replacement to ensure we don't mess up the rest of the URL
+        if ":5432" in SQLALCHEMY_DATABASE_URL:
+            SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace(":5432", ":6543")
+        else:
+            # If no port specified, insert 6543
+            domain = parsed.hostname
+            SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace(domain, f"{domain}:6543")
+        parsed = urlparse(SQLALCHEMY_DATABASE_URL)
+
     obfuscated_url = f"{parsed.scheme}://{parsed.username}:****@{parsed.hostname}:{parsed.port}{parsed.path}"
     print(f"DEBUG: Connecting to database: {obfuscated_url}")
-    if "pooler.supabase.com" in SQLALCHEMY_DATABASE_URL and ":5432" in SQLALCHEMY_DATABASE_URL:
-        print("⚠️ WARNING: You are using port 5432 with a Supabase Pooler. This often causes timeouts.")
-        print("👉 PLEASE CHANGE PORT 5432 TO 6543 IN YOUR DATABASE_URL ENVIRONMENT VARIABLE!")
 
 connect_args = {}
 if SQLALCHEMY_DATABASE_URL.startswith("postgresql"):
