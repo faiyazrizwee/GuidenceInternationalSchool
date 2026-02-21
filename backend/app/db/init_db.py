@@ -1,4 +1,4 @@
-
+import time
 from sqlmodel import Session, select
 
 from app.db.session import engine
@@ -78,8 +78,25 @@ def init_db(session: Session) -> None:
         print(f"DEBUG: Staff data already exists ({len(count)} members).")
 
 def main() -> None:
-    with Session(engine) as session:
-        init_db(session)
+    max_retries = 5
+    retry_delay = 2  # seconds, doubles each retry
+
+    for attempt in range(1, max_retries + 1):
+        try:
+            print(f"--- Database init attempt {attempt}/{max_retries} ---")
+            with Session(engine) as session:
+                init_db(session)
+            print("✅ Database initialization completed successfully.")
+            return
+        except Exception as e:
+            print(f"⚠️  Attempt {attempt}/{max_retries} failed: {e}")
+            if attempt < max_retries:
+                wait_time = retry_delay * (2 ** (attempt - 1))
+                print(f"   Retrying in {wait_time}s...")
+                time.sleep(wait_time)
+            else:
+                print("❌ All database init attempts failed.")
+                raise
 
 if __name__ == "__main__":
     main()
