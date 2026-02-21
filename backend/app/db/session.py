@@ -19,16 +19,22 @@ connect_args = {}
 if SQLALCHEMY_DATABASE_URL.startswith("postgresql"):
     # SSL is required for Supabase
     connect_args["sslmode"] = "require"
-    # Prevent hanging on connection
-    connect_args["connect_timeout"] = 10
+    # Prevent hanging on connection - increased for production
+    connect_args["connect_timeout"] = 20
+    # Enable TCP Keepalive for long-lived pool connections
+    connect_args["keepalives"] = 1
+    connect_args["keepalives_idle"] = 30
+    connect_args["keepalives_interval"] = 10
+    connect_args["keepalives_count"] = 5
 elif SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
     connect_args["check_same_thread"] = False
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, 
-    pool_pre_ping=True,
-    pool_size=5,
-    max_overflow=10,
+    pool_pre_ping=True,      # Check connection health before use
+    pool_recycle=300,        # Recycle connections every 5 mins
+    pool_size=10,            # Increased pool size for production
+    max_overflow=20,         # Allow more overflow
     connect_args=connect_args
 )
 from sqlmodel import Session
