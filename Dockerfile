@@ -6,7 +6,7 @@ RUN apk add --no-cache libc6-compat
 
 # Install dependencies based on preferred package manager
 COPY frontend/package*.json ./
-RUN npm ci
+RUN npm install
 
 # Build the app
 COPY frontend .
