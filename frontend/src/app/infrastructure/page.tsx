@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function Infrastructure() {
   return (
     <main>
-        <section className="page-banner" style={{backgroundImage: "url('/assets/gallery/Indpendence day/20240815_094025.jpg')", backgroundColor: "#003366"}}>
+        <section className="page-banner" style={{backgroundImage: "url('/assets/gallery/new_pic/PXL_20251018_082239126.PORTRAIT.jpg')", backgroundColor: "#003366"}}>
             <div className="container">
                 <h1 className="page-title">Infrastructure</h1>
                 <ul className="breadcrumb">

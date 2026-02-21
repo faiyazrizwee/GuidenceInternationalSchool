@@ -34,7 +34,7 @@ export default function Achievements() {
   return (
     <main>
         {/* Page Banner */}
-        <section className="page-banner" style={{backgroundImage: "url('/assets/gallery/Indpendence day/20240815_093151.jpg')", backgroundColor: "#003366"}}>
+        <section className="page-banner" style={{backgroundImage: "url('/assets/gallery/Indpendence day/20240815_090652.jpg')", backgroundColor: "#003366"}}>
             <div className="container">
                 <h1 className="page-title">Achievements</h1>
                 <ul className="breadcrumb">

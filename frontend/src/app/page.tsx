@@ -197,8 +197,8 @@ export default function Home() {
                 </div>
                 <div className="difference-image reveal">
                      <div className="image-grid-collage">
-                         <Image src="/assets/gallery/new_pic/IMG-20251016-WA0127.jpg" alt="Student Reading" width={300} height={200} className="collage-img-1" />
-                         <Image src="/assets/gallery/new_pic/IMG-20251016-WA0128.jpg" alt="Science Lab" width={300} height={200} className="collage-img-2" />
+                         <Image src="/assets/gallery/new_pic/PXL_20251015_080155943.PORTRAIT.jpg" alt="Student Reading" width={300} height={200} className="collage-img-1" />
+                         <Image src="/assets/gallery/new_pic/PXL_20251017_055832183.PORTRAIT.jpg" alt="Science Lab" width={300} height={200} className="collage-img-2" />
                      </div>
                 </div>
             </div>

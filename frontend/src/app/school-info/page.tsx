@@ -5,7 +5,7 @@ export default function SchoolInfo() {
   return (
     <main>
         {/* Page Banner */}
-        <section className="page-banner" style={{backgroundImage: "url('/assets/gallery/Plant drive/20240422_114108.jpg')", backgroundColor: "#003366"}}>
+        <section className="page-banner" style={{backgroundImage: "url('/assets/gallery/Indpendence day/20240815_094025.jpg')", backgroundColor: "#003366"}}>
             <div className="container">
                 <h1 className="page-title">School Uniform</h1>
                 <ul className="breadcrumb">

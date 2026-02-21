@@ -37,7 +37,7 @@ export default function MandatoryDisclosure() {
   return (
     <main>
         {/* Page Banner */}
-        <section className="page-banner" style={{backgroundImage: "url('/assets/gallery/new_pic/PXL_20251110_032005833.RAW-01.jpg')", backgroundColor: "#003366"}}>
+        <section className="page-banner" style={{backgroundImage: "url('/assets/gallery/Indpendence day/20240815_091329.jpg')", backgroundColor: "#003366"}}>
             <div className="container">
                 <h1 className="page-title">Mandatory Disclosure</h1>
                 <ul className="breadcrumb">
@@ -76,7 +76,7 @@ export default function MandatoryDisclosure() {
                     {/* Image Section */}
                     <div className="mt-16 mb-16 rounded-xl overflow-hidden shadow-lg">
                         <img 
-                            src="/assets/gallery/Beyond classroom/WhatsApp Image 2024-12-10 at 8.25.29 PM.jpeg" 
+                            src="/assets/gallery/Indpendence day/20240815_090652.jpg" 
                             alt="School Activities" 
                             className="w-full h-[400px] object-cover"
                         />

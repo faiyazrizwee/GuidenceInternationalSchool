@@ -33,7 +33,7 @@ export default async function Documents() {
   return (
     <main>
         {/* Page Banner */}
-        <section className="page-banner" style={{backgroundImage: "url('/assets/gallery/Indpendence day/20240815_095422.jpg')", backgroundColor: "#003366"}}>
+        <section className="page-banner" style={{backgroundImage: "url('/assets/images/document.jpg')", backgroundColor: "#003366"}}>
             <div className="container">
                 <h1 className="page-title">Documents</h1>
                 <ul className="breadcrumb">
