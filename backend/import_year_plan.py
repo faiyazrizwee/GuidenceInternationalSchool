@@ -12,7 +12,7 @@ from app.models.academics import YearPlan
 from app.db.session import engine
 
 def import_year_plan():
-    excel_path = "/home/faiyaz/part_time/new_project/frontend/public/assets/files/Year plan/UPDATED YEARLY PLAN 24-25.xlsx"
+    excel_path = os.path.join(os.path.dirname(__file__), "..", "frontend", "public", "assets", "files", "Year plan", "UPDATED YEARLY PLAN 24-25.xlsx")
     
     if not os.path.exists(excel_path):
         print(f"Error: File not found at {excel_path}")

@@ -18,7 +18,7 @@ export default async function FeeStructure() {
   return (
     <main>
       {/* Page Banner */}
-      <section className="page-banner" style={{backgroundImage: "url('/assets/images/hero.jpg')", backgroundColor: "#003366"}}>
+      <section className="page-banner" style={{backgroundImage: "url('/assets/gallery/Republic day/WhatsApp Image 2024-12-10 at 8.14.59 PM (1).jpeg')", backgroundColor: "#003366"}}>
           <div className="container">
               <h1 className="page-title">Fee Structure</h1>
               <ul className="breadcrumb">

@@ -11,8 +11,7 @@ class FeeStructure(SQLModel, table=True):
     annual_charges: str
     tuition_fee: str
     erp_fee: str
-    
-    # The following are NOT in the database table according to Supabase screenshot.
-    # Moving them to schemas or keeping as Optional fields that are NOT columns.
-    # By default SQLModel Fields ARE columns. To make them not columns, we should
-    # ideally not have them here if they aren't in the DB.
+    tuition_total: Optional[str] = None
+    exam_fee: Optional[str] = None
+    total_fee: Optional[str] = None
+    description: Optional[str] = None
