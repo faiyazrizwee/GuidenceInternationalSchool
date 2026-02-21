@@ -50,6 +50,11 @@ COPY --from=frontend-builder /app/frontend/.next/standalone ./frontend
 COPY --from=frontend-builder /app/frontend/public ./frontend/public
 COPY --from=frontend-builder /app/frontend/.next/static ./frontend/.next/static
 
+# Install sharp for production image optimization
+WORKDIR /app/frontend
+RUN npm install sharp
+WORKDIR /app
+
 # Permissions
 RUN chown -R appuser:nodejs /app
 USER appuser

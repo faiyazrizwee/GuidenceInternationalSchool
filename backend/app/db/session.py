@@ -26,6 +26,8 @@ if SQLALCHEMY_DATABASE_URL.startswith("postgresql"):
     connect_args["keepalives_idle"] = 30
     connect_args["keepalives_interval"] = 10
     connect_args["keepalives_count"] = 5
+    # detect dead connections faster (30s)
+    connect_args["tcp_user_timeout"] = 30000 
 elif SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
     connect_args["check_same_thread"] = False
 
