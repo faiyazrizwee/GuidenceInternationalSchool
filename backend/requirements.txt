@@ -14,3 +14,5 @@ pydantic-settings
 python-dotenv
 email-validator
 fastapi-mail
+pandas
+openpyxl

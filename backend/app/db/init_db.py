@@ -11,6 +11,7 @@ from app.models.fee import FeeStructure
 from app.models.academics import YearPlan, ClassTestSchedule, AcademicCalendar
 from app.core import security
 from app.core.config import settings
+import os
 
 def init_db(session: Session) -> None:
     # Tables are created by SQLModel automatically via create_all if we used it, 
@@ -86,6 +87,21 @@ def init_db(session: Session) -> None:
         # Count existing staff
         count = session.exec(select(StaffMember)).all()
         print(f"DEBUG: Staff data already exists ({len(count)} members).")
+
+    # Seed Year Plan Data if empty
+    from app.models.academics import YearPlan
+    if not session.exec(select(YearPlan)).first():
+        print("DEBUG: Year Plan table is empty. Attempting to seed from Excel...")
+        try:
+            # We call the import function from import_year_plan.py
+            # Note: import_year_plan.py needs to be importable
+            from import_year_plan import import_year_plan
+            import_year_plan()
+            print("DEBUG: Year Plan seeding attempted.")
+        except Exception as e:
+            print(f"ERROR: Failed to seed Year Plan: {str(e)}")
+    else:
+        print("DEBUG: Year Plan data already exists.")
 
 def main() -> None:
     max_retries = 5
