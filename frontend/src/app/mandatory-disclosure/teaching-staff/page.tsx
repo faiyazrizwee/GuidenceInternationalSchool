@@ -38,7 +38,7 @@ export default async function TeachingStaffDisclosure() {
     { sn: 1, info: "PRINCIPAL", strength: "1", details: `${principal.name} (${principal.qualification})`, link: null },
     { sn: 2, info: "VICE PRINCIPAL", strength: "0", details: "NIL", link: null },
     { sn: 3, info: "HEADMISTRESS/HEADMASTER", strength: "0", details: "NIL", link: null },
-    { sn: 4, info: "TOTAL NO. OF TEACHERS", strength: totalTeachers.toString(), details: "View All staff", link: "/staff" },
+    { sn: 4, info: "TOTAL NO. OF TEACHERS", strength: totalTeachers.toString(), details: "View All staff", link: "/assets/images/Teachingstaff.pdf" },
     { sn: "", info: "PGT", strength: pgtCount.toString(), details: "View PGT staffs", link: "/staff#PGT", isSub: true },
     { sn: "", info: "TGT", strength: tgtCount.toString(), details: "View TGT staffs", link: "/staff#TGT", isSub: true },
     { sn: "", info: "PRT", strength: prtCount.toString(), details: "View PRT staffs", link: "/staff#PRT", isSub: true },
