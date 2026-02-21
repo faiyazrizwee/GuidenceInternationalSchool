@@ -13,7 +13,7 @@ class ContactSubmission(SQLModel, table=True):
     submitted_at: datetime = Field(default_factory=datetime.utcnow)
 
 class AdmissionSubmission(SQLModel, table=True):
-    __tablename__ = "admissionssubmission"
+    __tablename__ = "admissionsubmission"
     id: Optional[int] = Field(default=None, primary_key=True)
     student_name: str
     date_of_birth: str  # Storing as string for simplicity, or could use date

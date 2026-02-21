@@ -27,7 +27,11 @@ def _truncate_password(password: str) -> str:
     return password.encode("utf-8")[:72].decode("utf-8", errors="ignore")
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(_truncate_password(plain_password), hashed_password)
+    try:
+        return pwd_context.verify(_truncate_password(plain_password), hashed_password)
+    except Exception as e:
+        print(f"Error verifying password: {e}")
+        return False
 
 def get_password_hash(password: str) -> str:
     return pwd_context.hash(_truncate_password(password))

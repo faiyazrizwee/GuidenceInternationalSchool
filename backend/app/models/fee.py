@@ -5,7 +5,7 @@ from sqlmodel import Field, SQLModel
 class FeeStructure(SQLModel, table=True):
     __tablename__ = "feestructure"
     id: Optional[int] = Field(default=None, primary_key=True)
-    class_group: str = Field(sa_column=Column("Class_group", String))
+    class_group: str = Field(sa_column=Column("class_group", String))
     registration_fee: str
     admission_fee: str
     annual_charges: str

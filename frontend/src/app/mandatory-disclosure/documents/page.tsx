@@ -4,20 +4,30 @@ import path from "path";
 
 // Function to get prospectus files
 async function getProspectusFiles() {
-  const docsDir = path.join(process.cwd(), "public/assets/files/School Docs");
+  const isProd = process.env.NODE_ENV === "production";
+  // In production (Next.js standalone), public is usually at /app/frontend/public or relative to server.js
+  const docsDir = path.join(process.cwd(), isProd ? "public/assets/files/School Docs" : "public/assets/files/School Docs");
   
-  // Check if directory exists
-  if (!fs.existsSync(docsDir)) {
-    return [];
+  // Try to find the directory, if not found try another common standalone path
+  let finalDocsDir = docsDir;
+  if (!fs.existsSync(finalDocsDir)) {
+    // Standalone mode might have a different relative path
+    const fallbackDir = path.join(process.cwd(), "../public/assets/files/School Docs");
+    if (fs.existsSync(fallbackDir)) {
+      finalDocsDir = fallbackDir;
+    } else {
+      console.warn("Documents directory not found at:", docsDir, "or", fallbackDir);
+      return [];
+    }
   }
 
   // Read files in the directory
-  const files = fs.readdirSync(docsDir);
+  const files = fs.readdirSync(finalDocsDir);
   
   return files
     .filter(file => file.toLowerCase().endsWith(".pdf")) // Filter PDF files
     .map(file => {
-        const stats = fs.statSync(path.join(docsDir, file));
+        const stats = fs.statSync(path.join(finalDocsDir, file));
         return {
             name: file,
             displayName: file.replace(".pdf", "").replace(/_/g, " "), // Clean up filename for display
