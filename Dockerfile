@@ -1,6 +1,6 @@
 # Syntax=docker/dockerfile:1
 # --- Stage 1: Frontend Build ---
-FROM node:18-alpine AS frontend-builder
+FROM node:20-alpine AS frontend-builder
 WORKDIR /app/frontend
 RUN apk add --no-cache libc6-compat
 
@@ -14,12 +14,14 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN npm run build
 
 # --- Stage 2: Final Runtime ---
-FROM python:3.11-slim AS runtime
+FROM python:3.11-slim-bookworm AS runtime
 
 # Install Node.js runtime and production essentials
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     curl \
-    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    gnupg \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
