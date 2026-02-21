@@ -27,7 +27,7 @@ echo "--- Starting Services ---"
 BACKEND_PORT=${BACKEND_PORT:-8000}
 echo "Starting Backend on 0.0.0.0:${BACKEND_PORT}..."
 cd /app/backend
-uvicorn app.main:app --host 0.0.0.0 --port ${BACKEND_PORT} &
+uvicorn app.main:app --host 0.0.0.0 --port ${BACKEND_PORT} --proxy-headers --forwarded-allow-ips='*' &
 BACKEND_PID=$!
 
 # 2. Start Frontend (Next.js)
