@@ -70,16 +70,16 @@ def migrate():
             
             count = 0
             for item in items:
-                # Detach from source session to avoid conflicts
-                source_session.expunge(item)
-                # Ensure we don't have session-specific state
-                # Adding to target session
-                target_session.add(item)
+                # Create a fresh object from the existing data
+                data = item.model_dump()
+                new_item = model(**data)
+                target_session.add(new_item)
                 count += 1
             
             try:
+                print(f"  ⏳ Committing {count} items for {model_name}...")
                 target_session.commit()
-                print(f"  ✅ Successfully migrated {count} items.")
+                print(f"  ✅ Successfully migrated {count} items for {model_name}.")
             except Exception as e:
                 target_session.rollback()
                 print(f"  ❌ Error migrating {model_name}: {e}")
