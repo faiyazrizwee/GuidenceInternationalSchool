@@ -24,9 +24,16 @@ def login_access_token(
     OAuth2 compatible token login, get an access token for future requests
     """
     user = db.exec(select(User).where(User.username == form_data.username)).first()
-    if not user or not security.verify_password(form_data.password, user.hashed_password):
+    if not user:
+        print(f"LOGIN ERROR: User '{form_data.username}' not found in database.")
         raise HTTPException(status_code=400, detail="Incorrect email or password")
-    elif not user.is_active:
+    
+    if not security.verify_password(form_data.password, user.hashed_password):
+        print(f"LOGIN ERROR: Password mismatch for user '{form_data.username}'.")
+        raise HTTPException(status_code=400, detail="Incorrect email or password")
+    
+    if not user.is_active:
+        print(f"LOGIN ERROR: User '{form_data.username}' is inactive.")
         raise HTTPException(status_code=400, detail="Inactive user")
     
     access_token_expires = timedelta(minutes=60) # 1 hour for demo

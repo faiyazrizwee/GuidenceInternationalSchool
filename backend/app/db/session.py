@@ -15,16 +15,18 @@ if SQLALCHEMY_DATABASE_URL:
     
     # PERMANENT PRODUCTION FIX: Auto-switch Supabase pooler to port 6543
     # Port 5432 (direct/session) often times out on Render. Port 6543 (transaction) is more stable.
-    if parsed.hostname and "pooler.supabase.com" in parsed.hostname and (parsed.port == 5432 or parsed.port is None):
-        print("🔧 AUTO-CORRECT: Switching Supabase port from 5432 to 6543 for better stability.")
-        # Manual replacement to ensure we don't mess up the rest of the URL
-        if ":5432" in SQLALCHEMY_DATABASE_URL:
-            SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace(":5432", ":6543")
-        else:
-            # If no port specified, insert 6543
-            domain = parsed.hostname
-            SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace(domain, f"{domain}:6543")
+    if "pooler.supabase.com" in SQLALCHEMY_DATABASE_URL and ":5432" in SQLALCHEMY_DATABASE_URL:
+        print("🔧 AUTO-CORRECT: Detected Port 5432 on Supabase. Switching to Port 6543 for stability...")
+        SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace(":5432", ":6543")
         parsed = urlparse(SQLALCHEMY_DATABASE_URL)
+    elif "pooler.supabase.com" in SQLALCHEMY_DATABASE_URL and ":" not in SQLALCHEMY_DATABASE_URL.split("@")[-1]:
+        # If no port is specified in the host part, it defaults to 5432. Add 6543.
+        print("🔧 AUTO-CORRECT: Adding Port 6543 to Supabase connection for stability...")
+        parsed = urlparse(SQLALCHEMY_DATABASE_URL)
+        domain = parsed.hostname
+        if domain:
+             SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace(domain, f"{domain}:6543")
+             parsed = urlparse(SQLALCHEMY_DATABASE_URL)
 
     obfuscated_url = f"{parsed.scheme}://{parsed.username}:****@{parsed.hostname}:{parsed.port}{parsed.path}"
     print(f"DEBUG: Connecting to database: {obfuscated_url}")
