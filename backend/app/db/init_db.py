@@ -30,7 +30,7 @@ def init_db(session: Session) -> None:
             print("DEBUG: Admin user not found. Creating...")
             user = User(
                 username="admin",
-                hashed_password=security.get_password_hash("admin123"), # Change in production
+                hashed_password=security.get_password_hash("admin123"), # Default pass
                 is_superuser=True,
             )
             session.add(user)
@@ -40,13 +40,13 @@ def init_db(session: Session) -> None:
         else:
             print(f"DEBUG: Admin user already exists. ID: {user.id}, Active: {user.is_active}")
             # Always reset admin password to ensure it's valid and using current bcrypt settings
-            print("DEBUG: Resetting admin password to ensure compatibility...")
+            print("DEBUG: Ensuring admin password is set to 'admin123'...")
             user.hashed_password = security.get_password_hash("admin123")
             user.is_active = True
             user.is_superuser = True
             session.add(user)
             session.commit()
-            print("DEBUG: Admin password reset successfully.")
+            print("DEBUG: Admin password verified/reset successfully.")
     except Exception as e:
         print(f"ERROR: Failed to check/create admin user: {str(e)}")
         import traceback

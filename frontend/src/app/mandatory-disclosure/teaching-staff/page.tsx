@@ -3,10 +3,19 @@ import { API_URL } from "@/config";
 
 async function getStaff() {
   try {
-    const res = await fetch(`${API_URL}/staff`, { cache: "no-store" });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+    const res = await fetch(`${API_URL}/staff`, { 
+      cache: "no-store",
+      signal: controller.signal
+    });
+    
+    clearTimeout(timeoutId);
     if (!res.ok) return [];
     return res.json();
   } catch (error) {
+    console.error("Error fetching staff:", error);
     return [];
   }
 }

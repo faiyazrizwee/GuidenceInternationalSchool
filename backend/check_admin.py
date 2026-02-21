@@ -20,15 +20,15 @@ def check_admin():
         print(f"✅ User 'admin' found. ID: {user.id}")
         
         # Check password
-        if security.verify_password("admin", user.hashed_password):
-            print("✅ Password 'admin' is CORRECT.")
+        if security.verify_password("admin123", user.hashed_password):
+            print("✅ Password 'admin123' is CORRECT.")
         else:
-            print("❌ Password mismatch. The stored hash does NOT match 'admin'.")
+            print("❌ Password mismatch. The stored hash does NOT match 'admin123'.")
             print(f"   Stored Hash: {user.hashed_password}")
             
             # Reset password
-            print("🔄 Resetting password to 'admin'...")
-            user.hashed_password = security.get_password_hash("admin")
+            print("🔄 Resetting password to 'admin123'...")
+            user.hashed_password = security.get_password_hash("admin123")
             session.add(user)
             session.commit()
             print("✅ Password reset successfully.")

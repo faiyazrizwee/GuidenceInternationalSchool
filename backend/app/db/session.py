@@ -19,6 +19,8 @@ connect_args = {}
 if SQLALCHEMY_DATABASE_URL.startswith("postgresql"):
     # SSL is required for Supabase
     connect_args["sslmode"] = "require"
+    # Prevent hanging on connection
+    connect_args["connect_timeout"] = 10
 elif SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
     connect_args["check_same_thread"] = False
 
