@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { API_URL } from "@/config";
 
+export const dynamic = "force-dynamic";
+
 async function getStaff() {
   try {
     const controller = new AbortController();
