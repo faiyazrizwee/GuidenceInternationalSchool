@@ -1,5 +1,6 @@
 
 from typing import List
+from pydantic import validator
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
@@ -15,21 +16,13 @@ class Settings(BaseSettings):
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "postgres"
     POSTGRES_DB: str = "app"
-    _DATABASE_URL: str | None = None
+    DATABASE_URL: str = "sqlite:///./sql_app.db"
 
-    @property
-    def DATABASE_URL(self) -> str:
-        url = self._DATABASE_URL
-        if url:
-            # SQLAlchemy requires postgresql:// instead of postgres://
-            if url.startswith("postgres://"):
-                url = url.replace("postgres://", "postgresql://", 1)
-            return url
-        return f"sqlite:///./sql_app.db"
-
-    @DATABASE_URL.setter
-    def DATABASE_URL(self, value: str):
-        self._DATABASE_URL = value
+    @validator("DATABASE_URL", pre=True)
+    def fix_postgres_protocol(cls, v):
+        if v and isinstance(v, str) and v.startswith("postgres://"):
+            return v.replace("postgres://", "postgresql://", 1)
+        return v or "sqlite:///./sql_app.db"
 
     # Email
     MAIL_USERNAME: str | None = None
