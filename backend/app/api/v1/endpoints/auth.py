@@ -12,6 +12,10 @@ from app.schemas.user import Token, UserRead
 
 router = APIRouter()
 
+@router.get("/health")
+def health_check():
+    return {"status": "ok", "message": "Backend is running"}
+
 @router.post("/login/access-token", response_model=Token)
 def login_access_token(
     db: Session = Depends(deps.get_db), form_data: OAuth2PasswordRequestForm = Depends()
