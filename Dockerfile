@@ -31,6 +31,10 @@ RUN groupadd -g 1001 nodejs && \
     useradd -u 1001 -g nodejs -s /bin/sh -m appuser
 
 # Setup Backend
+ENV VIRTUAL_ENV=/app/backend/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
 COPY backend/requirements.txt ./backend/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r ./backend/requirements.txt
 COPY backend ./backend
