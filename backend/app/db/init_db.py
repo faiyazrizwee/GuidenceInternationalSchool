@@ -39,17 +39,18 @@ def init_db(session: Session) -> None:
             print("DEBUG: Admin user created successfully.")
         else:
             print(f"DEBUG: Admin user already exists. ID: {user.id}, Active: {user.is_active}")
-            # Ensure password is correct (admin123)
-            if not security.verify_password("admin123", user.hashed_password):
-                print("DEBUG: Admin password mismatch. Resetting to 'admin123'...")
-                user.hashed_password = security.get_password_hash("admin123")
-                user.is_active = True
-                user.is_superuser = True
-                session.add(user)
-                session.commit()
-                print("DEBUG: Admin password reset successfully.")
+            # Always reset admin password to ensure it's valid and using current bcrypt settings
+            print("DEBUG: Resetting admin password to ensure compatibility...")
+            user.hashed_password = security.get_password_hash("admin123")
+            user.is_active = True
+            user.is_superuser = True
+            session.add(user)
+            session.commit()
+            print("DEBUG: Admin password reset successfully.")
     except Exception as e:
         print(f"ERROR: Failed to check/create admin user: {str(e)}")
+        import traceback
+        traceback.print_exc()
         session.rollback()
 
     # Seed Staff Data if empty

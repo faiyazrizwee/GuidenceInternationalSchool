@@ -22,8 +22,12 @@ def create_access_token(
     encoded_jwt = jwt.encode(to_encode, settings.POSTGRES_PASSWORD, algorithm=ALGORITHM) # USING DB PASSWORD AS SECRET FOR DEMO. IN PROD USE A SEPARATE SECRET!
     return encoded_jwt
 
+def _truncate_password(password: str) -> str:
+    """Truncate password to 72 bytes (bcrypt's maximum)."""
+    return password.encode("utf-8")[:72].decode("utf-8", errors="ignore")
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    return pwd_context.verify(_truncate_password(plain_password), hashed_password)
 
 def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
+    return pwd_context.hash(_truncate_password(password))
