@@ -4,6 +4,7 @@ from datetime import datetime
 from sqlmodel import Field, SQLModel
 
 class ContactSubmission(SQLModel, table=True):
+    __tablename__ = "contactsubmission"
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
     email: str
@@ -12,6 +13,7 @@ class ContactSubmission(SQLModel, table=True):
     submitted_at: datetime = Field(default_factory=datetime.utcnow)
 
 class AdmissionSubmission(SQLModel, table=True):
+    __tablename__ = "admissionssubmission"
     id: Optional[int] = Field(default=None, primary_key=True)
     student_name: str
     date_of_birth: str  # Storing as string for simplicity, or could use date

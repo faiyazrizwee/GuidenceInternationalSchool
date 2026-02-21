@@ -7,6 +7,7 @@ class SubscriberBase(SQLModel):
     is_active: bool = True
 
 class Subscriber(SubscriberBase, table=True):
+    __tablename__ = "subscriber"
     id: Optional[int] = Field(default=None, primary_key=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 

@@ -5,8 +5,6 @@ services:
     plan: free
     region: singapore
     envVars:
-      - key: DATABASE_URL
-        value: sqlite:///data/sql_app.db
       - key: BACKEND_CORS_ORIGINS
         value: "*"
       - key: NEXT_PUBLIC_API_URL

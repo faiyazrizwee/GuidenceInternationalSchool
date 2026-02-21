@@ -3,6 +3,7 @@ from datetime import datetime, date
 from sqlmodel import Field, SQLModel
 
 class YearPlan(SQLModel, table=True):
+    __tablename__ = "yearplan"
     id: Optional[int] = Field(default=None, primary_key=True)
     date: date
     month: str
@@ -11,6 +12,7 @@ class YearPlan(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class ClassTestSchedule(SQLModel, table=True):
+    __tablename__ = "classtestschedule"
     id: Optional[int] = Field(default=None, primary_key=True)
     class_name: str
     subject: str
@@ -19,6 +21,7 @@ class ClassTestSchedule(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class AcademicCalendar(SQLModel, table=True):
+    __tablename__ = "academiccalendar"
     id: Optional[int] = Field(default=None, primary_key=True)
     event_name: str
     event_date: datetime

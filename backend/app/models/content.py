@@ -6,6 +6,7 @@ from sqlmodel import Field, SQLModel
 
 
 class Event(SQLModel, table=True):
+    __tablename__ = "event"
     id: Optional[int] = Field(default=None, primary_key=True)
     title: str
     description: str
