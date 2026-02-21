@@ -29,7 +29,7 @@ export default function YearPlanManager() {
 
   const fetchEvents = async () => {
     try {
-      const res = await fetch(`${API_URL}/year-plan/`);
+      const res = await fetch(`${API_URL}/year-plan`);
       if (res.ok) {
         const data = await res.json();
         setEvents(data);
@@ -64,7 +64,7 @@ export default function YearPlanManager() {
 
       const payload = { ...newEvent, month };
 
-      const res = await fetch(`${API_URL}/year-plan/`, {
+      const res = await fetch(`${API_URL}/year-plan`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

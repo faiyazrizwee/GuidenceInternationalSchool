@@ -4,7 +4,7 @@ import { API_URL } from "@/config";
 
 async function getFees() {
   try {
-    const res = await fetch(`${API_URL}/fees/`, { cache: "no-store" });
+    const res = await fetch(`${API_URL}/fees`, { cache: "no-store" });
     if (!res.ok) return [];
     return res.json();
   } catch (error) {

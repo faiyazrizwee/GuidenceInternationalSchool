@@ -6,7 +6,7 @@ from app.models.announcement import Announcement, AnnouncementCreate, Announceme
 
 router = APIRouter()
 
-@router.post("/", response_model=AnnouncementRead)
+@router.post("", response_model=AnnouncementRead)
 def create_announcement(*, session: Session = Depends(get_db), announcement: AnnouncementCreate):
     db_announcement = Announcement.from_orm(announcement)
     session.add(db_announcement)
@@ -14,7 +14,7 @@ def create_announcement(*, session: Session = Depends(get_db), announcement: Ann
     session.refresh(db_announcement)
     return db_announcement
 
-@router.get("/", response_model=List[AnnouncementRead])
+@router.get("", response_model=List[AnnouncementRead])
 def read_announcements(*, session: Session = Depends(get_db), offset: int = 0, limit: int = 100):
     announcements = session.exec(select(Announcement).offset(offset).limit(limit).order_by(Announcement.created_at.desc())).all()
     return announcements

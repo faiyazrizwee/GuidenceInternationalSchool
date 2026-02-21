@@ -18,7 +18,7 @@ export default function AnnouncementsManager() {
         if (!token) return;
 
         try {
-            const res = await fetch(`${API_URL}/announcement/`, {
+            const res = await fetch(`${API_URL}/announcement`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.ok) {
@@ -36,7 +36,7 @@ export default function AnnouncementsManager() {
         if (!token) return router.push("/admin/login");
 
         try {
-            const res = await fetch(`${API_URL}/announcement/`, {
+            const res = await fetch(`${API_URL}/announcement`, {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json", 

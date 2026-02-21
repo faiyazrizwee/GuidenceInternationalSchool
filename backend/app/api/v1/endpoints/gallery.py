@@ -7,7 +7,7 @@ from app.schemas.gallery import GalleryCreate, GalleryRead, GalleryUpdate
 
 router = APIRouter()
 
-@router.get("/", response_model=List[GalleryRead])
+@router.get("", response_model=List[GalleryRead])
 def read_gallery_images(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
@@ -15,7 +15,7 @@ def read_gallery_images(
 ):
     return db.exec(select(GalleryImage).offset(skip).limit(limit)).all()
 
-@router.post("/", response_model=GalleryRead)
+@router.post("", response_model=GalleryRead)
 def create_gallery_image(
     *,
     db: Session = Depends(deps.get_db),

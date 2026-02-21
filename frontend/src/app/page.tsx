@@ -38,12 +38,12 @@ export default function Home() {
       let response;
       if (isUnsubscribing) {
           // Unsubscribe logic
-          response = await fetch(`${API_URL}/subscriber/?email=${encodeURIComponent(email)}`, {
+          response = await fetch(`${API_URL}/subscriber?email=${encodeURIComponent(email)}`, {
               method: "DELETE",
           });
       } else {
           // Subscribe logic
-          response = await fetch(`${API_URL}/subscriber/`, {
+          response = await fetch(`${API_URL}/subscriber`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

@@ -23,7 +23,7 @@ export default function GalleryManager() {
 
   const fetchImages = async () => {
     try {
-      const res = await fetch(`${API_URL}/gallery/`);
+      const res = await fetch(`${API_URL}/gallery`);
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data)) setImages(data);
@@ -45,7 +45,7 @@ export default function GalleryManager() {
     }
 
     try {
-      const res = await fetch(`${API_URL}/gallery/`, {
+      const res = await fetch(`${API_URL}/gallery`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

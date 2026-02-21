@@ -24,7 +24,7 @@ export default function StaffManager() {
 
   const fetchStaff = async () => {
     try {
-      const res = await fetch(`${API_URL}/staff/`);
+      const res = await fetch(`${API_URL}/staff`);
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data)) setStaff(data);
@@ -44,7 +44,7 @@ export default function StaffManager() {
         image_url: newStaff.image_url.trim().replace(/^frontend\/public\//, "/").replace(/^public\//, "/") === "" ? null : newStaff.image_url.trim().replace(/^frontend\/public\//, "/").replace(/^public\//, "/")
       };
 
-      const res = await fetch(`${API_URL}/staff/`, {
+      const res = await fetch(`${API_URL}/staff`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify(payload),

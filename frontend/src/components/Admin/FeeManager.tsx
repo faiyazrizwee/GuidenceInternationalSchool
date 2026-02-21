@@ -31,7 +31,7 @@ export default function FeeManager() {
 
   const fetchFees = async () => {
     try {
-      const res = await fetch(`${API_URL}/fees/`);
+      const res = await fetch(`${API_URL}/fees`);
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data)) setFees(data);
@@ -50,7 +50,7 @@ export default function FeeManager() {
     if (!token) return router.push("/admin/login");
 
     try {
-      const res = await fetch(`${API_URL}/fees/`, {
+      const res = await fetch(`${API_URL}/fees`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify(newFee),

@@ -7,7 +7,7 @@ from app.schemas.fee import FeeCreate, FeeRead, FeeUpdate
 
 router = APIRouter()
 
-@router.get("/", response_model=List[FeeRead])
+@router.get("", response_model=List[FeeRead])
 def read_fees(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
@@ -19,7 +19,7 @@ def read_fees(
     fees = db.exec(select(FeeStructure).offset(skip).limit(limit)).all()
     return fees
 
-@router.post("/", response_model=FeeRead)
+@router.post("", response_model=FeeRead)
 def create_fee(
     *,
     db: Session = Depends(deps.get_db),

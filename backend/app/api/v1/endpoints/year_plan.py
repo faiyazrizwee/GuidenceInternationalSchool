@@ -9,7 +9,7 @@ from app.models.user import User
 
 router = APIRouter()
 
-@router.get("/", response_model=List[YearPlanRead])
+@router.get("", response_model=List[YearPlanRead])
 def read_year_plans(
     skip: int = 0,
     limit: int = 100,
@@ -18,7 +18,7 @@ def read_year_plans(
     year_plans = session.exec(select(YearPlan).offset(skip).limit(limit).order_by(YearPlan.date)).all()
     return year_plans
 
-@router.post("/", response_model=YearPlanRead)
+@router.post("", response_model=YearPlanRead)
 def create_year_plan(
     *,
     session: Session = Depends(get_db),

@@ -22,7 +22,7 @@ export default function YearPlan() {
 
   const fetchEvents = async () => {
     try {
-      const res = await fetch(`${API_URL}/year-plan/`);
+      const res = await fetch(`${API_URL}/year-plan`);
       if (res.ok) {
         const data = await res.json();
         setEvents(data);

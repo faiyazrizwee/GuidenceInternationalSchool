@@ -12,7 +12,7 @@ class NotificationRequest(BaseModel):
     message: str
     type: str  # fees, holiday, exam, announcement
 
-@router.post("/", response_model=SubscriberRead)
+@router.post("", response_model=SubscriberRead)
 def create_subscriber(
     *,
     db: Session = Depends(deps.get_db),
@@ -36,7 +36,7 @@ def create_subscriber(
     db.refresh(subscriber)
     return subscriber
 
-@router.get("/", response_model=List[SubscriberRead])
+@router.get("", response_model=List[SubscriberRead])
 def read_subscribers(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
@@ -110,7 +110,7 @@ async def broadcast_notification(
 
     return {"message": f"Broadcast sent to {len(subscribers)} subscribers"}
 
-@router.delete("/", response_model=dict)
+@router.delete("", response_model=dict)
 def unsubscribe_subscriber(
     *,
     db: Session = Depends(deps.get_db),

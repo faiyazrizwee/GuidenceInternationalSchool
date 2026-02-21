@@ -3,7 +3,7 @@ import { API_URL } from "@/config";
 
 async function getStaff() {
   try {
-    const res = await fetch(`${API_URL}/staff/`, { cache: "no-store" });
+    const res = await fetch(`${API_URL}/staff`, { cache: "no-store" });
     if (!res.ok) return [];
     return res.json();
   } catch (error) {

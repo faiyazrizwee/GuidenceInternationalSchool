@@ -7,7 +7,7 @@ from app.schemas.staff import StaffCreate, StaffRead, StaffUpdate
 
 router = APIRouter()
 
-@router.get("/", response_model=List[StaffRead])
+@router.get("", response_model=List[StaffRead])
 def read_staff(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
@@ -16,7 +16,7 @@ def read_staff(
     staff = db.exec(select(StaffMember).offset(skip).limit(limit)).all()
     return staff
 
-@router.post("/", response_model=StaffRead)
+@router.post("", response_model=StaffRead)
 def create_staff(
     *,
     db: Session = Depends(deps.get_db),

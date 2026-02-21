@@ -24,7 +24,7 @@ export default function SubscriberManager() {
 
   const fetchSubscribers = async () => {
     try {
-      const response = await fetch(`${API_URL}/subscriber/`);
+      const response = await fetch(`${API_URL}/subscriber`);
       if (response.ok) {
         const data = await response.json();
         setSubscribers(data);
