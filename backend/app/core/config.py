@@ -16,13 +16,13 @@ class Settings(BaseSettings):
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "postgres"
     POSTGRES_DB: str = "app"
-    DATABASE_URL: str = "sqlite:///./sql_app.db"
+    DATABASE_URL: str
 
     @validator("DATABASE_URL", pre=True)
     def fix_postgres_protocol(cls, v):
         if v and isinstance(v, str) and v.startswith("postgres://"):
             return v.replace("postgres://", "postgresql://", 1)
-        return v or "sqlite:///./sql_app.db"
+        return v
 
     # Email
     MAIL_USERNAME: str | None = None
