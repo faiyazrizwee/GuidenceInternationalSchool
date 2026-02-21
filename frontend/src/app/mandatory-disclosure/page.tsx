@@ -37,7 +37,7 @@ export default function MandatoryDisclosure() {
   return (
     <main>
         {/* Page Banner */}
-        <section className="page-banner" style={{backgroundImage: "url('/assets/gallery/Annual day/432633574_927262959404894_3277676167273804378_n.jpg')", backgroundColor: "#003366"}}>
+        <section className="page-banner" style={{backgroundImage: "url('/assets/gallery/new_pic/PXL_20251110_032005833.RAW-01.jpg')", backgroundColor: "#003366"}}>
             <div className="container">
                 <h1 className="page-title">Mandatory Disclosure</h1>
                 <ul className="breadcrumb">
