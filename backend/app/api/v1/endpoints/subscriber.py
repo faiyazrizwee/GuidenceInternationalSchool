@@ -1,5 +1,5 @@
 from typing import List, Any
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlmodel import Session, select
 from app.api import deps
 from app.models.subscriber import Subscriber, SubscriberCreate, SubscriberRead
@@ -53,6 +53,7 @@ async def broadcast_notification(
     *,
     db: Session = Depends(deps.get_db),
     notification: NotificationRequest,
+    background_tasks: BackgroundTasks,
 ) -> Any:
     """
     Send notification to all active subscribers.
@@ -84,31 +85,20 @@ async def broadcast_notification(
                 </body>
             </html>
             """
-            import asyncio
-            # Sending individually or as bcc? fast-mail supports list of recipients.
-            # However, showing all emails in "To" is bad for privacy.
-            # fast-mail sends as Bcc if body is same? No, usually it depends on config.
-            # MessageSchema(recipients=...) puts them in To.
-            # We should probably iterate or use BCC. 
-            # For now, let's assume we want to protect privacy.
             
-            # MessageSchema doesn't support BCC easily in all versions, 
-            # but usually we send individual emails or use a mailing list service.
-            # For this simple implementation, let's send to the first one as TO and others as BCC? 
-            # Or just loop. Looping is safer for privacy but slower.
-            
-            # Let's use the utility which takes a list. 
-            # We will modify the utility to handle this or just pass the list if it's small.
-            # If the user has many subscribers, this should be a background task.
-            
-            # For now, let's just pass the list to the utility.
-            await send_broadcast_email(notification.subject, recipients, body)
+            # Using FastAPI BackgroundTasks instead of awaiting synchronously
+            background_tasks.add_task(
+                send_broadcast_email,
+                subject=notification.subject,
+                recipients=recipients,
+                body=body
+            )
             
         except Exception as e:
-            print(f"Error sending email: {e}")
-            raise HTTPException(status_code=500, detail=f"Failed to send emails: {str(e)}")
+            print(f"Error preparing email task: {e}")
+            raise HTTPException(status_code=500, detail=f"Failed to prepare email task: {str(e)}")
 
-    return {"message": f"Broadcast sent to {len(subscribers)} subscribers"}
+    return {"message": f"Broadcast scheduled for {len(subscribers)} subscribers"}
 
 @router.delete("", response_model=dict)
 def unsubscribe_subscriber(
